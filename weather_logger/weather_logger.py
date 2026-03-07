@@ -1,61 +1,16 @@
-"""
-weather_logger.py
-=================
-Downloads today's weather data for Leipzig, Germany from the Open-Meteo API
-and appends it as a new column in weather_data.xlsx (sheet: WeatherLog).
 
-INSTALLATION (run once in VS Code terminal):
---------------------------------------------
-pip install requests pandas openpyxl
-
-RUN:
-----
-python weather_logger.py
-
-HOW TO CHANGE LOCATION:
------------------------
-Edit LATITUDE and LONGITUDE below.
-Find coordinates at: https://www.latlong.net/
-
-HOW TO ADD MORE WEATHER VARIABLES:
------------------------------------
-1. Browse all available daily variables at:
-   https://open-meteo.com/en/docs  (scroll to "Daily Weather Variables")
-2. Copy the variable name (e.g. "uv_index_max")
-3. Add it to WEATHER_VARIABLES below
-4. Add a matching human-readable label to VARIABLE_LABELS in the same position
-
-EXCEL LAYOUT AFTER SEVERAL RUNS:
-----------------------------------
-Row 1  : [Variable]         | Run 1      | Run 2      | Run 3      |  <- auto-numbered
-Row 2  : Date               | 2025-06-01 | 2025-06-03 | 2025-06-07 |  <- date as data row
-Row 3  : Temp High (C)      | 24.1       | 19.5       | 22.0       |
-Row 4  : Temp Average (C)   | 17.3       | 14.2       | 16.8       |
-Row 5  : Temp Low (C)       | 10.5       | 8.9        | 11.2       |
-Row 6  : Sunrise            | 04:58      | 04:56      | 04:51      |
-Row 7  : Sunset             | 21:22      | 21:24      | 21:29      |
-Row 8  : Precipitation (mm) | 0.0        | 11.4       | 2.1        |
-Row 9  : Wind Speed (km/h)  | 15.2       | 31.0       | 18.4       |
-Row 10 : Label (1-10)       |            | 6          |            |  <- YOU fill in manually
-
-NOTE ON DESIGN:
-- Columns are numbered sequentially (Run 1, Run 2, ...) - no gaps ever
-- Date is just another data row, useful for your overview but ignored by ML
-- Skipped days leave no empty columns - the next run simply becomes the next column
-- Label row is left blank by the script for you to fill in manually each day
-"""
-
+# all imports
 import requests
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from datetime import date
+from datetime import date      #imports only the date class from datetime
 import os
 import sys
 
-# -----------------------------------------
-# CONFIGURATION - edit these as needed
-# -----------------------------------------
+
+# CONFIGURATION
+# ALL_CAPS means a constant
 
 LATITUDE  = 51.3397   # Leipzig, Germany
 LONGITUDE = 12.3731
@@ -63,7 +18,7 @@ LONGITUDE = 12.3731
 EXCEL_FILE = "weather_data.xlsx"
 SHEET_NAME = "WeatherLog"
 
-# Open-Meteo API variable names (must match API exactly)
+# Open-Meteo API variable names (!! these must match exactly !!)
 WEATHER_VARIABLES = [
     "temperature_2m_max",
     "temperature_2m_mean",
@@ -74,7 +29,7 @@ WEATHER_VARIABLES = [
     "wind_speed_10m_max",
 ]
 
-# Human-readable labels written into column A (must match order above)
+# Labels as seen in the excel document ( !! must match order from above !!)
 VARIABLE_LABELS = [
     "Temp High (C)",
     "Temp Average (C)",
@@ -85,31 +40,22 @@ VARIABLE_LABELS = [
     "Wind Speed Max (km/h)",
 ]
 
-LABEL_ROW_TEXT = "Label (1-10)"   # bottom row, filled in manually
+LABEL_ROW_TEXT = "Label (1-10)"   # bottom row / space for label
 
-# -----------------------------------------
-# ROW INDEX CONSTANTS
-# Row 1 : corner header
-# Row 2 : Date
-# Row 3 : first weather variable
-# ...
-# Last  : Label (1-10)
-# -----------------------------------------
 
 DATE_ROW    = 2
 DATA_START  = 3                                      # first weather variable row
-LABEL_ROW   = DATA_START + len(VARIABLE_LABELS)     # e.g. row 10
+LABEL_ROW   = DATA_START + len(VARIABLE_LABELS)     #  row for labels is equal to (row where data starts) + (number of variables, which is length of variable labels)
 
-# -----------------------------------------
-# STYLES
-# -----------------------------------------
-
+# the following make the excel table look and feel pretty :) 
+# fill colours:
 HEADER_FILL   = PatternFill("solid", start_color="2E4057")  # dark navy
 RUN_FILL      = PatternFill("solid", start_color="048A81")  # teal  - run number header
 DATE_FILL     = PatternFill("solid", start_color="E8F4F8")  # pale blue - date row
 LABEL_FILL    = PatternFill("solid", start_color="F0F4F8")  # light grey - variable labels
 ML_LABEL_FILL = PatternFill("solid", start_color="FFF3CD")  # amber - Label row
 
+#font size and colour
 WHITE_FONT  = Font(name="Arial", bold=True, color="FFFFFF", size=10)
 DARK_FONT   = Font(name="Arial", bold=True, color="2E4057", size=10)
 DATE_FONT   = Font(name="Arial", color="2E4057", size=10)
@@ -121,17 +67,15 @@ LEFT        = Alignment(horizontal="left",   vertical="center")
 THIN        = Side(style="thin", color="CCCCCC")
 THIN_BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
-# -----------------------------------------
-# FETCH DATA
-# -----------------------------------------
 
+# fetching data function:
 def fetch_weather():
-    today = date.today().isoformat()
+    today = date.today().isoformat()  # date-today() calls the today() method on the date class, returning todays date as an object which .isoformat() converts to a string with yyyy-mm-dd format
     url = "https://api.open-meteo.com/v1/forecast"
-    params = {
+    params = {      # {} define a dictionary of key-value pairs
         "latitude":        LATITUDE,
         "longitude":       LONGITUDE,
-        "daily":           ",".join(WEATHER_VARIABLES),
+        "daily":           ",".join(WEATHER_VARIABLES),  # this take the list WEATHER_VA
         "start_date":      today,
         "end_date":        today,
         "timezone":        "Europe/Berlin",
