@@ -10,4 +10,4 @@ one can then add a label to every data point. in this case it is an interger 1-1
 .
 10: singlet, long sleeve thermal, jumper, winter jacket, thermal bottoms, thick pants, and two pairs of socks.
 
-this is just a data collecting script with the intention of collecting data samples for ML.
+this is just a data collecting script with the intention of collecting data samples for ML. the code is machine generated with very specific instructions but all comments are man made.
