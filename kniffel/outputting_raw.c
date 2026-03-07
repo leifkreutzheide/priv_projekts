@@ -4,25 +4,6 @@
 
 
 
-//how sort function should compare ints: (doesnt need to be in main() or specifically called)
-int compareInts(const void *a, const void *b)  {
-    return (*(int*)a - *(int*)b);
-} 
- 
-
-// save, sort, print and restore function
-void saveSortPrintRestoreFunction (int dice[5], int backup[5]){
-
-    //save
-    memcpy(backup, dice, 5 * sizeof(int));
-    //sort  
-    qsort(dice, 5, sizeof(int), compareInts);
-    //print
-    printf("%d%d%d%d%d\n", dice[0], dice[1], dice[2], dice[3], dice[4]);
-    //restore
-    memcpy(dice, backup, 5 * sizeof(int));
-
-}
 
 
 // MAIN FUNCTION // 
