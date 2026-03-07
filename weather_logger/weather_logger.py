@@ -75,14 +75,15 @@ def fetch_weather():
     params = {      # {} define a dictionary of key-value pairs
         "latitude":        LATITUDE,
         "longitude":       LONGITUDE,
-        "daily":           ",".join(WEATHER_VARIABLES),  # this take the list WEATHER_VA
+        "daily":           ",".join(WEATHER_VARIABLES),  # this take the list WEATHER_VARIABLES  and turns it into a comma seperated string for the API (API wants it like that)
         "start_date":      today,
         "end_date":        today,
         "timezone":        "Europe/Berlin",
         "wind_speed_unit": "kmh",
     }
+
     print(f"Fetching weather data for {today} ...")
-    resp = requests.get(url, params=params, timeout=15)
+    resp = requests.get(url, params=params, timeout=15)         # send HTTP GET request to U
     resp.raise_for_status()
     data = resp.json()
 
