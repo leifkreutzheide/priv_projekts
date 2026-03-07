@@ -1,0 +1,14 @@
+# Compiled binaries
+*.exe
+*.out
+*.o
+
+# Excel data file — local only, not for GitHub
+weather_logger/weather_data.xlsx
+
+# VS Code personal settings
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
