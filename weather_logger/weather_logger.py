@@ -83,24 +83,25 @@ def fetch_weather():
     }
 
     print(f"Fetching weather data for {today} ...")
-    resp = requests.get(url, params=params, timeout=15)         # send HTTP GET request to U
-    resp.raise_for_status()
-    data = resp.json()
+    resp = requests.get(url, params=params, timeout=15)         # send HTTP GET request to url (params dictionary are query parameters automatically)
+    resp.raise_for_status()                                     # checks if server returned 404
+    data = resp.json()                                          # parses the JSON response body into a python dictionary automatically 
 
-    daily = data.get("daily", {})
-    values = []
+    
+    daily = data.get("daily", {})       # looks up the key daily in dictionaray
+    values = []                         # creates empty list/array
+
+    # checks for things (i dont really know)
     for var in WEATHER_VARIABLES:
         raw = daily.get(var, [None])[0]
         if var in ("sunrise", "sunset") and raw:
-            raw = raw[11:16]   # "2025-06-01T04:58" -> "04:58"
+            raw = raw[11:16]   # fancy pants string slicing to get "04:58" out of "2025-06-01T04:58"
         values.append(raw)
 
-    return today, values
+    return today, values # returns tuple (multiple values)
 
-# -----------------------------------------
-# WRITE COLUMN A LABELS
-# -----------------------------------------
 
+# the following fucntions sets up column A for us, how kind
 def write_col_a(ws):
     """Write all row labels into column A. Skips cells that already have a value."""
 
@@ -126,10 +127,9 @@ def write_col_a(ws):
     # Label (1-10) row
     set_cell(LABEL_ROW, LABEL_ROW_TEXT, ML_LABEL_FILL, AMBER_FONT, LEFT)
 
-# -----------------------------------------
-# WRITE ONE DATA COLUMN
-# -----------------------------------------
 
+
+# the following function writes the data into the next colomn
 def write_data_column(ws, col, run_number, today, values):
     """Write run header + date + weather values + blank label cell."""
 
@@ -154,9 +154,7 @@ def write_data_column(ws, col, run_number, today, values):
 
     ws.column_dimensions[get_column_letter(col)].width = 14
 
-# -----------------------------------------
-# CREATE OR APPEND
-# -----------------------------------------
+
 
 def build_new_workbook(today, values):
     wb = Workbook()
@@ -205,9 +203,7 @@ def append_to_existing(today, values):
     wb.save(EXCEL_FILE)
     print(f"Appended Run {run_number} for {today} to column {next_col} in '{EXCEL_FILE}'.")
 
-# -----------------------------------------
-# MAIN
-# -----------------------------------------
+# ! MAIN !
 
 if __name__ == "__main__":
     try:
