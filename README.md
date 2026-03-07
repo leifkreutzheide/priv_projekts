@@ -15,3 +15,6 @@ the weather logger script does the following:
   how to change location: find coordinates at https://www.latlong.net/
   how to add more weather variables: browse available at https://open-meteo.com/en/docs, copy variable name and add it to WEATHER_VARIABLES, add matching readable label to VARIABLE_LABELS (must be same order)
   note: columns appear sequentially, henceforth no gaps appear if days are skipped
+
+
+  the kniffel files are a WIP
