@@ -2,18 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int e;
-int d;
-int c;
-int b;
-int a;
-int overallCount = 1;
 
-//array of dice (a --> e) with starting values
-int dice[5] = {1, 1, 1, 1, 1}; 
-
-//backup of dice
-int backup[5];
 
 //how sort function should compare ints: (doesnt need to be in main() or specifically called)
 int compareInts(const void *a, const void *b)  {
@@ -35,32 +24,8 @@ void saveSortPrintRestoreFunction (int dice[5], int backup[5]){
 
 }
 
-//base function that does the printing after cycling:
-void printAndCycle(int dice[5]) {
-    for (e = 1; e < 7; e++) 
-        {
-            dice[4] = e;
-            saveSortPrintRestoreFunction (dice, backup);
-    
 
-        }
-        
-        
-}
-
-
-void EandD1(int dice[5]){ 
-
-    for (d = 1; d < 7 ; d++)
-    {
-    dice [3] = d;
-    printAndCycle(dice); 
-    }
-
-}
-
-
- // MAIN FUNCTION // 
+// MAIN FUNCTION // 
 int main()                             
 {
 
@@ -70,6 +35,14 @@ int main()
     int d;
     int e;
     int count = 1;
+    int AllPossibilitiesNoRepeats[300];
+    int current;
+
+    FILE *raw = fopen("raw_data.txt", "w");  // "w" = write (creates file if not exists)
+        if (raw == NULL) {
+            printf("failed to open file\n");
+            return 1;
+        }
 
     printf("\n");
 
@@ -84,8 +57,7 @@ int main()
         {
                     for (e = 1; e < 7; e++)
         {
-            printf("%d) %d%d%d%d%d\n", count, a, b, c, d, e);
-             count = count + 1;
+            fprintf(raw, "%d%d%d%d%d\n", a, b, c, d, e); // prints all raw data to raw aka raw_data.txt
              
         }   
         }   
@@ -94,7 +66,7 @@ int main()
         
     }
     
-    
+    fclose(raw); // closes raw_data.txt file
 
 return 0;
 }
