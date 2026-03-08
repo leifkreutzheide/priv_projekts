@@ -1,6 +1,6 @@
 # priv_projekts
 
-**weather logger:**
+**weather logger**
 the weather logger script does the following:
   1) gets weather data
   2) puts into excel doc
