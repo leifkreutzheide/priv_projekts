@@ -1,6 +1,6 @@
 # priv_projekts
 
-the weather logger script does the following:
+the **weather logger** script does the following:
   1) gets weather data
   2) puts into excel doc
   
@@ -9,12 +9,13 @@ the weather logger script does the following:
   .
   .
   10: singlet, long sleeve thermal, jumper, winter jacket, thermal bottoms, thick pants, and two pairs of socks.
-  
-  this is just a data collecting script with the intention of collecting data samples for ML. the code is machine generated but all comments are man made.
+  to note:
+  - this is just a data collecting script with the intention of collecting data samples for ML. the code is machine generated but all comments are man made.
+  - how to change location: find coordinates at https://www.latlong.net/
+  - how to add more weather variables: browse available at https://open-meteo.com/en/docs, copy variable name and add it to WEATHER_VARIABLES, add matching readable label to VARIABLE_LABELS (must be same order)
+  - note: columns appear sequentially, henceforth no gaps appear if days are skipped
 
-  how to change location: find coordinates at https://www.latlong.net/
-  how to add more weather variables: browse available at https://open-meteo.com/en/docs, copy variable name and add it to WEATHER_VARIABLES, add matching readable label to VARIABLE_LABELS (must be same order)
-  note: columns appear sequentially, henceforth no gaps appear if days are skipped
 
+**  Kniffel files:**
 
-  the kniffel files are a WIP
+  - outputting_raw.c outputs all 7776 (6^5) possible dice combinations (for 5 die) into raw_data.txt. Verarbeitung_von_raw.c takes in the raw data, sorts each roll (low to high), sorts out duplicates (7524 of them), and writes the remaining into possibilities_no_repeats.txt. Then calculating_percentages.c reads them out and sorts them into subsets (kniffel, große Straße, usw.) and allows for different data representations to be printed out (how many possibilities per subset, how likely each subset option is to be rolled at randon and something else).
