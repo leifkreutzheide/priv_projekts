@@ -1,6 +1,6 @@
 # priv_projekts
 
-the weather logger script does the following:
+the **weather logger** script does the following:
   1) gets weather data
   2) puts into excel doc
   
@@ -16,6 +16,6 @@ the weather logger script does the following:
   - note: columns appear sequentially, henceforth no gaps appear if days are skipped
 
 
-  Kniffel files:
+**  Kniffel files:**
 
-  outputting_raw.c outputs all 7776 (6^5) possible dice combinations (for 5 die) into raw_data.txt. Verarbeitung_von_raw.c takes in the raw data, sorts each roll (low to high), sorts out duplicates (7524 of them), 
+  - outputting_raw.c outputs all 7776 (6^5) possible dice combinations (for 5 die) into raw_data.txt. Verarbeitung_von_raw.c takes in the raw data, sorts each roll (low to high), sorts out duplicates (7524 of them), and writes the remaining into possibilities_no_repeats.txt. Then calculating_percentages.c reads them out and sorts them into subsets (kniffel, große Straße, usw.) and allows for different data representations to be printed out (how many possibilities per subset, how likely each subset option is to be rolled at randon and something else).
