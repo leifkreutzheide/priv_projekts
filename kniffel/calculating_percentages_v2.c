@@ -6,6 +6,7 @@
 int arr[allPossibilities] = {0};
 int arrSorted[allPossibilities] = {0};
 int twoDimArr[allPossibilities][5] = {0}; // 2Darr[row][column]. 2Darr[i] gives a 5 digit array that lies at the i-th row
+int otherROLLS[2400] = {0}; // for testing purposes, to see which rolls are categorized as "other"
 
 int i = 0;
 // int n = 0;
@@ -15,13 +16,15 @@ int kleineStraße = 0;
 int fullHouse = 0;
 int triple = 0;
 int quad = 0;
-int other = 0;
 int pair = 0;
+int twoPairs = 0;
+int other = 0;
+
 
 
 void getDigits();
 int compareInts();
-void checkingWhatRoleWhatIs(int twoDimArr[allPossibilities][5], int n, int *kniffel, int *großeStraße, int *kleineStraße, int *fullHouse, int *triple, int *quad, int *other);
+void checkingWhatRoleWhatIs(int twoDimArr[allPossibilities][5], int n, int *kniffel, int *großeStraße, int *kleineStraße, int *fullHouse, int *triple, int *quad, int *pair, int *twoPairs, int *other);
 
 void main() {
 
@@ -50,9 +53,6 @@ void main() {
 
     }
 
-    printf("%d\n", arrSorted[0]);
-    printf("%d\n", arrSorted[7775]);
-    printf("%d%d%d%d%d\n", twoDimArr[1][0], twoDimArr[1][1], twoDimArr[1][2], twoDimArr[1][3], twoDimArr[1][4]); 
 
 //------------------------ transfering sorted rolls into 2D array (for easier access to single digits)
 
@@ -60,25 +60,30 @@ void main() {
     getDigits(arrSorted[n], twoDimArr[n]);
 }
 
-    printf("%d\n", arrSorted[0]);
-    printf("%d\n", arrSorted[7775]);
-    printf("%d%d%d%d%d\n", twoDimArr[2][0], twoDimArr[2][1], twoDimArr[2][2], twoDimArr[2][3], twoDimArr[2][4]);
-
 //------------------------ checking what role what is and counting how many of each there are
     for (int n = 0; n < allPossibilities; n++)
     {
-        checkingWhatRoleWhatIs(twoDimArr, n, &kniffel, &großeStraße, &kleineStraße, &fullHouse, &triple, &quad, &other);
+        checkingWhatRoleWhatIs(twoDimArr, n, &kniffel, &großeStraße, &kleineStraße, &fullHouse, &triple, &quad, &pair, &twoPairs, &other);
     }
     
-    
+    /*
     printf("\nkniffel occurrences: %d (%.3f%%)\n", kniffel, (float)kniffel / allPossibilities * 100);
     printf("große Straße: %d (%.3f%%)\n", großeStraße, (float)großeStraße / allPossibilities * 100);
     printf("kleine Straße: %d (%.3f%%)\n", kleineStraße, (float)kleineStraße / allPossibilities * 100);
     printf("full house: %d (%.3f%%)\n", fullHouse, (float)fullHouse / allPossibilities * 100);
     printf("quad: %d (%.3f%%)\n", quad, (float)quad / allPossibilities * 100);
     printf("triple: %d (%.3f%%)\n", triple, (float)triple / allPossibilities * 100);
+    printf("real pair: %d (%.3f%%)\n", pair, (float)pair / allPossibilities * 100);
+    printf("two pairs(not the same): %d (%.3f%%)\n", twoPairs, (float)twoPairs / allPossibilities * 100);
     printf("other: %d (%.3f%%)\n", other, (float)other / allPossibilities * 100);
-    printf("total rolls: %d\n", kniffel + großeStraße + kleineStraße + fullHouse + triple + quad + other);
+    */
+    
+
+    for (int i = 0; i < other; i++)
+    {
+        printf("%d\n", otherROLLS[i]);
+    }
+    
 
   
 } //---------------------- end main 
@@ -98,10 +103,10 @@ int compareInts(const void *a, const void *b) {
 }
 
 
-void checkingWhatRoleWhatIs(int twoDimArr[][5], int n, int *kniffel, int *großeStraße, int *kleineStraße, int *fullHouse, int *triple, int *quad, int *other) {
+void checkingWhatRoleWhatIs(int twoDimArr[][5], int n, int *kniffel, int *großeStraße, int *kleineStraße, int *fullHouse, int *triple, int *quad, int *pair, int *twoPairs, int *other) {
 
     int otherFlag = 1;
-    // int role = 10000*twoDimArr[n][0] + 1000*twoDimArr[n][1] + 100*twoDimArr[n][2] + 10*twoDimArr[n][3] + twoDimArr[n][4];
+    int role = 10000*twoDimArr[n][0] + 1000*twoDimArr[n][1] + 100*twoDimArr[n][2] + 10*twoDimArr[n][3] + twoDimArr[n][4];
 
     // kniffel (all the same)
     if (twoDimArr[n][0] == twoDimArr[n][1] && twoDimArr[n][1] == twoDimArr[n][2] &&
@@ -142,13 +147,24 @@ void checkingWhatRoleWhatIs(int twoDimArr[][5], int n, int *kniffel, int *große
         (*triple)++;
         otherFlag = 0; }
 
-    // pair
-    if ((twoDimArr[n][0] == twoDimArr[n][1] || twoDimArr[n][1] == twoDimArr[n][2] || twoDimArr[n][2] == twoDimArr[n][3] || twoDimArr[n][3] == twoDimArr[n][4])) {
+    // pair 
+    if ((twoDimArr[n][0] == twoDimArr[n][1] && twoDimArr[n][0] != twoDimArr[n][2] && twoDimArr[n][0] != twoDimArr[n][3] && twoDimArr[n][0] != twoDimArr[n][4]) ||
+        (twoDimArr[n][1] == twoDimArr[n][2] && twoDimArr[n][1] != twoDimArr[n][0] && twoDimArr[n][1] != twoDimArr[n][3] && twoDimArr[n][1] != twoDimArr[n][4]) ||
+        (twoDimArr[n][2] == twoDimArr[n][3] && twoDimArr[n][2] != twoDimArr[n][0] && twoDimArr[n][2] != twoDimArr[n][1] && twoDimArr[n][2] != twoDimArr[n][4]) ||
+        (twoDimArr[n][3] == twoDimArr[n][4] && twoDimArr[n][3] != twoDimArr[n][0] && twoDimArr[n][3] != twoDimArr[n][1] && twoDimArr[n][3] != twoDimArr[n][2])) {
         (*pair)++;
+        otherFlag = 0; }
+
+    // two pairs
+    if ((twoDimArr[n][0] == twoDimArr[n][1] && twoDimArr[n][2] == twoDimArr[n][3]) && twoDimArr[n][0] != twoDimArr[n][2] ||
+        (twoDimArr[n][0] == twoDimArr[n][1] && twoDimArr[n][3] == twoDimArr[n][4]) && twoDimArr[n][0] != twoDimArr[n][4] ||
+        (twoDimArr[n][1] == twoDimArr[n][2] && twoDimArr[n][3] == twoDimArr[n][4]) && twoDimArr[n][1] != twoDimArr[n][3]) {
+        (*twoPairs)++;
         otherFlag = 0; }
 
     // other
     if (otherFlag) {
+        otherROLLS[*other] = role; // for testing purposes, to see which rolls are categorized as "other"
         (*other)++;
     }   }
 
