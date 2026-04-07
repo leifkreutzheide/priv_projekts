@@ -66,7 +66,7 @@ void main() {
         checkingWhatRoleWhatIs(twoDimArr, n, &kniffel, &großeStraße, &kleineStraße, &fullHouse, &triple, &quad, &pair, &twoPairs, &other);
     }
     
-    /*
+    
     printf("\nkniffel occurrences: %d (%.3f%%)\n", kniffel, (float)kniffel / allPossibilities * 100);
     printf("große Straße: %d (%.3f%%)\n", großeStraße, (float)großeStraße / allPossibilities * 100);
     printf("kleine Straße: %d (%.3f%%)\n", kleineStraße, (float)kleineStraße / allPossibilities * 100);
@@ -76,13 +76,13 @@ void main() {
     printf("real pair: %d (%.3f%%)\n", pair, (float)pair / allPossibilities * 100);
     printf("two pairs(not the same): %d (%.3f%%)\n", twoPairs, (float)twoPairs / allPossibilities * 100);
     printf("other: %d (%.3f%%)\n", other, (float)other / allPossibilities * 100);
-    */
+    
     
 
-    for (int i = 0; i < other; i++)
+    /* for (int i = 0; i < other; i++)
     {
         printf("%d\n", otherROLLS[i]);
-    }
+    } */ 
     
 
   
