@@ -78,11 +78,11 @@ void main() {
     printf("other: %d (%.3f%%)\n", other, (float)other / allPossibilities * 100);
     */
     
-
     for (int i = 0; i < other; i++)
     {
         printf("%d\n", otherROLLS[i]);
     }
+    
     
 
   
