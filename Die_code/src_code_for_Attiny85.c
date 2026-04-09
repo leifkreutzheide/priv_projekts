@@ -20,18 +20,18 @@ PORTB = 0b000000;             // alle low
 
 
 
-void main() {
+int main(void) {
 
 
 while (1)
 {
 
-  int roll = rand() % 6;
+  int roll = rand() % 6;            // insert AVR random number generator here, this is just a placeholder
   int num = -1;
   
 
-  if (PIND & (1 << PIND4)) { 
-    PORTB = 0b00010000; } else {
+  if (PIND & (1 << PIND4)) {        // fix this 
+    PORTB = 0b00010000; } else {    // what is this supposed to do?
       num = roll; 
     switch (num) {
       case 0:
