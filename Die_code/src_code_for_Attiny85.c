@@ -21,8 +21,10 @@
 #define six     0b001110
 #define button  0b001000
 
-int TIME = 1000;
-void outputLights(int roll);    // function for outputting the light pattern for each roll
+uint8_t TIME = 1000;
+void outputRollNumber(int roll);    // function for outputting the light pattern for each roll
+uint8_t seed;
+
 
 // ------configs ---------------------------------------------------------------------------
 
@@ -30,24 +32,32 @@ DDRB = 0b000111;            // PB0, PB1, PB2 as output (all other dont care or f
 PORTB = 0b00001000;         // activate pull-up resistor for button on PB3
 sei();                      // set enable interrupts (globaly)
 GIMSK |= (1 << PCIE);       // set pin change interrupt enable
-PCMSK |= (1 << PCINT3);       // set pin change interrupt for PB3 (button)
+PCMSK |= (1 << PCINT3);      // set pin change interrupt for PB3 (button)
 MCUCR |= (1 << SE);         // set sleep enable bit
-PRR |= (1 << 0b001111);     // power saving
-ADCSRA |= (1 << ADEN);      // disable ADC
+PRR |= (1 << 0b0001111);     // power saving
+ADCSRA |= (10000110);       // enable ADC, prescaler = 64 @ 1235kHz
+ADMUX |= (1 << MUX1);       // set ADC input to pin 2/PB4
+
+void flashingLights();
 
 
  ISR(PCINT3_vect)   // vector name depends on interrupt type
 {
-    // debounce the button press
-    // read pin number 3/PB4
-    // map readings to 0-5
-    / call outputLights with the mapped value
+    delay_us(250);                                  // debounce delay
+    for (uint8_t i = 0; i < 8; i++) {               // read LSB 8 times
+        ADCSRA |= (1 << ADSC);                      // start conversion
+        while (ADCSRA & (1 << ADSC));               // creating a mask over ADSC Bit to check if still converting
+          seed = (seed << 1) | (ADC & 1);           // shift seed left, ADC marco that reads ADCL and ADCH correctly, uses (&1) mask to read just the LSB
+    }
+
+    ADCSRA &= ~(1 << ADEN);                       // disable ADC to save power
+    flashingLights();
+    outputRollNumber(seed);                       // output the result based on the seed
+                      
 
 }
 
-void flashingLights();
 
- //-----main -----------------------------------------------------------------------------
 
 int main(void) {
 
@@ -56,7 +66,6 @@ while (1)
 {
 
 sleep_mode();   // put the microcontroller to sleep until an interrupt occurs
-
 
 
 }
@@ -87,38 +96,12 @@ void flashingLights(){
     _delay_ms(HALFSECOND);
 }
 
-void outputLights(int roll) {
-  switch (roll) {
-      case 0:
-        flashingLights()
-          PORTB = one;
-          _delay_ms(TIME);
-          break;
-      case 1:
-        flashingLights()
-          PORTB = two;
-          _delay_ms(TIME);
-          break;
-      case 2:
-        flashingLights()
-          PORTB = three;
-          _delay_ms(TIME);
-          break;
-      case 3:
-        flashingLights()
-          PORTB = four;
-          _delay_ms(TIME);
-          break;
-      case 4:
-            flashingLights()
-          PORTB = five;
-          _delay_ms(TIME);
-          break;
-      case 5:
-            flashingLights()
-
-          PORTB = six;
-          _delay_ms(TIME);
-          break;
-    }
+void outputRollNumber(uint8_t seed) {
+    if      (seed < 43)  { flashingLights(); PORTB = one;   }
+    else if (seed < 86)  { flashingLights(); PORTB = two;   }
+    else if (seed < 128) { flashingLights(); PORTB = three; }
+    else if (seed < 170) { flashingLights(); PORTB = four;  }
+    else if (seed < 213) { flashingLights(); PORTB = five;  }
+    else                 { flashingLights(); PORTB = six;   }
+    _delay_ms(TIME);
 }
