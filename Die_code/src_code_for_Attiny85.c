@@ -30,7 +30,7 @@ void flashingLights();
  ISR(PCINT0_vect)   // vector name depends on interrupt type
 {
     
-    _delay_us(250);                                  // debounce delay
+    _delay_ms(30);                                  // debounce delay (typical debounce time is around 20ms))
     if (!(PINB & (1 << PB3))) {                     // only proceed if pin is LOW (pressed)
         ADCSRA |= (1 << ADEN);                          // re-enable ADC
         for (uint8_t i = 0; i < 8; i++) {               // read LSB 8 times
