@@ -15,12 +15,12 @@
 #define TWOSECONDS      2000
 #define THREESECONDS    3000
 
-#define one     0b001001
-#define two     0b001010
-#define three   0b001011
-#define four    0b001100
-#define five    0b001101
-#define six     0b001110
+#define one     0b00001001
+#define two     0b00001010
+#define three   0b00001011
+#define four    0b00001100
+#define five    0b00001101
+#define six     0b00001110
 #define TIME    2800
 
 uint8_t seed;
@@ -31,7 +31,7 @@ void flashingLights();
  ISR(PCINT0_vect)                                       // vector name depends on interrupt type
 {
     
-
+    _delay_us(500);                                     // wait for bounce to settle
     if (!(PINB & (1 << PB3))) {                         // only proceed if pin is LOW (pressed)
         ADCSRA |= (1 << ADEN);                          // re-enable ADC
         for (uint8_t i = 0; i < 8; i++) {               // read LSB 8 times
